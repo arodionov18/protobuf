@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package test;
+
+message ABC {
+    required int64 a = 1;
+    optional string b = 2;
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package test;
+
+message ABC {
+    repeated int64 a = 1;
+    repeated int64 a_index = 2;
+    repeated int64 a_notused = 3;
+    string b = 4;
+    string b_notused = 5;
+    bytes c = 6;
+    bytes c_notused = 7;
+
+    message Nested {
+        bool value = 1;
+    }
+    
+    Nested d = 8;
+    Nested d_notused = 9;
+}

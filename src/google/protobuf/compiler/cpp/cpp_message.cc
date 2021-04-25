@@ -763,6 +763,7 @@ void MessageGenerator::GenerateSingularFieldHasBits(
     format(
         "inline bool $classname$::has_$name$() const {\n"
         "$annotate_accessor$"
+        "  // @@protoc_insertion_point(field_has:$full_name$.$name$)\n"
         "  return _weak_field_map_.Has($number$);\n"
         "}\n");
     return;
@@ -792,6 +793,7 @@ void MessageGenerator::GenerateSingularFieldHasBits(
         "}\n"
         "inline bool $classname$::has_$name$() const {\n"
         "$annotate_accessor$"
+        "  // @@protoc_insertion_point(field_has:$full_name$.$name$)\n"
         "  return _internal_has_$name$();\n"
         "}\n");
   } else if (field->cpp_type() == FieldDescriptor::CPPTYPE_MESSAGE) {
@@ -811,6 +813,7 @@ void MessageGenerator::GenerateSingularFieldHasBits(
     format(
         "inline bool $classname$::has_$name$() const {\n"
         "$annotate_accessor$"
+        "  // @@protoc_insertion_point(field_has:$full_name$.$name$)\n"
         "  return _internal_has_$name$();\n"
         "}\n");
   }
@@ -861,6 +864,7 @@ void MessageGenerator::GenerateOneofMemberHasBits(const FieldDescriptor* field,
         "}\n"
         "inline bool $classname$::has_$name$() const {\n"
         "$annotate_accessor$"
+        "  // @@protoc_insertion_point(field_has:$full_name$.$field_name$)\n"
         "  return _internal_has_$name$();\n"
         "}\n");
   } else if (HasPrivateHasMethod(field)) {
