@@ -347,13 +347,18 @@ inline bool IsLazy(const FieldDescriptor* field, const Options& options) {
 }
 
 inline bool IsFieldUsed(const FieldDescriptor* field, const Options& options) {
-  return true;
+  return !options.access_info_map ||
+         options.access_info_map->IsAccessed(field->full_name()) ||
+         options.access_info_map->IsParentMessageAccessed(field->full_name(), field->name());
 }
 
 // Returns true if "field" is stripped.
-inline bool IsFieldStripped(const FieldDescriptor* /*field*/,
-                            const Options& /*options*/) {
-  return false;
+inline bool IsFieldStripped(const FieldDescriptor* field,
+                            const Options& options) {
+  if (!options.unused_field_stripping) {
+    return false;
+  }
+  return !IsFieldUsed(field, options);
 }
 
 // Does the file contain any definitions that need extension_set.h?

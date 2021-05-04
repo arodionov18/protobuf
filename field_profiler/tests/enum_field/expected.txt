@@ -1,0 +1,3 @@
+test.ABC getters
+	test.ABC.used	1
+	test.ABC.unused	0

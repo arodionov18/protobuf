@@ -83,6 +83,7 @@ set(libprotoc_files
 )
 
 set(libprotoc_headers
+  ${protobuf_source_dir}/src/google/protobuf/compiler/cpp/cpp_access_info_map.h
   ${protobuf_source_dir}/src/google/protobuf/compiler/cpp/cpp_enum.h
   ${protobuf_source_dir}/src/google/protobuf/compiler/cpp/cpp_enum_field.h
   ${protobuf_source_dir}/src/google/protobuf/compiler/cpp/cpp_extension.h

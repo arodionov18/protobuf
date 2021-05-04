@@ -209,9 +209,6 @@ cmake/cmake-build-debug/
 ./_build/
 build
 
-# Generated files
-generated
-
 # Visual Studio 2017
 .vs
 

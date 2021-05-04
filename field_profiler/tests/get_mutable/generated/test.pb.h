@@ -187,7 +187,7 @@ class ABC_Nested PROTOBUF_FINAL :
     kValueFieldNumber = 1,
   };
   // bool value = 1;
-  void clear_value();
+  void clear_value(){__builtin_trap();}
   bool value() const;
   void set_value(bool value);
   private:
@@ -200,13 +200,14 @@ class ABC_Nested PROTOBUF_FINAL :
     public:
       Tracker() {
         bitmap_ = new std::atomic<uint32_t>[1 / 32 + (1 % 32 != 0)];
-        DynamicTracker::RegisterProto(ABC_Nested::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_);
+        DynamicTracker::RegisterProto(ABC_Nested::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_, (std::atomic<uint32_t>*)&state_);
       }
   
       ~Tracker() {
         delete [] bitmap_;
       }
       std::atomic<uint32_t>* bitmap_;
+      std::atomic<uint32_t> state_;
     };
   public:
     static Tracker tracker_;
@@ -217,7 +218,6 @@ class ABC_Nested PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  bool value_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_test_2eproto;
 };
@@ -349,11 +349,8 @@ class ABC PROTOBUF_FINAL :
     kDNotusedFieldNumber = 9,
   };
   // repeated int64 a = 1;
-  int a_size() const;
-  private:
-  int _internal_a_size() const;
-  public:
-  void clear_a();
+  int a_size() const {__builtin_trap();}
+  void clear_a(){__builtin_trap();}
   private:
   ::PROTOBUF_NAMESPACE_ID::int64 _internal_a(int index) const;
   const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
@@ -371,11 +368,8 @@ class ABC PROTOBUF_FINAL :
       mutable_a();
 
   // repeated int64 a_index = 2;
-  int a_index_size() const;
-  private:
-  int _internal_a_index_size() const;
-  public:
-  void clear_a_index();
+  int a_index_size() const {__builtin_trap();}
+  void clear_a_index(){__builtin_trap();}
   private:
   ::PROTOBUF_NAMESPACE_ID::int64 _internal_a_index(int index) const;
   const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
@@ -393,11 +387,8 @@ class ABC PROTOBUF_FINAL :
       mutable_a_index();
 
   // repeated int64 a_notused = 3;
-  int a_notused_size() const;
-  private:
-  int _internal_a_notused_size() const;
-  public:
-  void clear_a_notused();
+  int a_notused_size() const {__builtin_trap();}
+  void clear_a_notused(){__builtin_trap();}
   private:
   ::PROTOBUF_NAMESPACE_ID::int64 _internal_a_notused(int index) const;
   const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
@@ -415,7 +406,7 @@ class ABC PROTOBUF_FINAL :
       mutable_a_notused();
 
   // string b = 4;
-  void clear_b();
+  void clear_b(){__builtin_trap();}
   const std::string& b() const;
   void set_b(const std::string& value);
   void set_b(std::string&& value);
@@ -431,7 +422,7 @@ class ABC PROTOBUF_FINAL :
   public:
 
   // string b_notused = 5;
-  void clear_b_notused();
+  void clear_b_notused(){__builtin_trap();}
   const std::string& b_notused() const;
   void set_b_notused(const std::string& value);
   void set_b_notused(std::string&& value);
@@ -447,7 +438,7 @@ class ABC PROTOBUF_FINAL :
   public:
 
   // bytes c = 6;
-  void clear_c();
+  void clear_c(){__builtin_trap();}
   const std::string& c() const;
   void set_c(const std::string& value);
   void set_c(std::string&& value);
@@ -463,7 +454,7 @@ class ABC PROTOBUF_FINAL :
   public:
 
   // bytes c_notused = 7;
-  void clear_c_notused();
+  void clear_c_notused(){__builtin_trap();}
   const std::string& c_notused() const;
   void set_c_notused(const std::string& value);
   void set_c_notused(std::string&& value);
@@ -479,53 +470,40 @@ class ABC PROTOBUF_FINAL :
   public:
 
   // .test.ABC.Nested d = 8;
-  bool has_d() const;
-  private:
-  bool _internal_has_d() const;
-  public:
-  void clear_d();
-  const ::test::ABC_Nested& d() const;
-  ::test::ABC_Nested* release_d();
-  ::test::ABC_Nested* mutable_d();
-  void set_allocated_d(::test::ABC_Nested* d);
-  private:
-  const ::test::ABC_Nested& _internal_d() const;
-  ::test::ABC_Nested* _internal_mutable_d();
-  public:
+  bool has_d() const {__builtin_trap();}
+  void clear_d(){__builtin_trap();}
+  const ::test::ABC_Nested& d() const { __builtin_trap(); }
+  ::test::ABC_Nested* release_d() { __builtin_trap(); }
+  ::test::ABC_Nested* mutable_d() { __builtin_trap(); }
+  void set_allocated_d(::test::ABC_Nested* d) { __builtin_trap(); }
   void unsafe_arena_set_allocated_d(
-      ::test::ABC_Nested* d);
-  ::test::ABC_Nested* unsafe_arena_release_d();
+      ::test::ABC_Nested* d) { __builtin_trap(); }
+  ::test::ABC_Nested* unsafe_arena_release_d() { __builtin_trap(); }
 
   // .test.ABC.Nested d_notused = 9;
-  bool has_d_notused() const;
-  private:
-  bool _internal_has_d_notused() const;
-  public:
-  void clear_d_notused();
-  const ::test::ABC_Nested& d_notused() const;
-  ::test::ABC_Nested* release_d_notused();
-  ::test::ABC_Nested* mutable_d_notused();
-  void set_allocated_d_notused(::test::ABC_Nested* d_notused);
-  private:
-  const ::test::ABC_Nested& _internal_d_notused() const;
-  ::test::ABC_Nested* _internal_mutable_d_notused();
-  public:
+  bool has_d_notused() const {__builtin_trap();}
+  void clear_d_notused(){__builtin_trap();}
+  const ::test::ABC_Nested& d_notused() const { __builtin_trap(); }
+  ::test::ABC_Nested* release_d_notused() { __builtin_trap(); }
+  ::test::ABC_Nested* mutable_d_notused() { __builtin_trap(); }
+  void set_allocated_d_notused(::test::ABC_Nested* d_notused) { __builtin_trap(); }
   void unsafe_arena_set_allocated_d_notused(
-      ::test::ABC_Nested* d_notused);
-  ::test::ABC_Nested* unsafe_arena_release_d_notused();
+      ::test::ABC_Nested* d_notused) { __builtin_trap(); }
+  ::test::ABC_Nested* unsafe_arena_release_d_notused() { __builtin_trap(); }
 
   private:
     class Tracker {
     public:
       Tracker() {
         bitmap_ = new std::atomic<uint32_t>[9 / 32 + (9 % 32 != 0)];
-        DynamicTracker::RegisterProto(ABC::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_);
+        DynamicTracker::RegisterProto(ABC::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_, (std::atomic<uint32_t>*)&state_);
       }
   
       ~Tracker() {
         delete [] bitmap_;
       }
       std::atomic<uint32_t>* bitmap_;
+      std::atomic<uint32_t> state_;
     };
   public:
     static Tracker tracker_;
@@ -536,18 +514,6 @@ class ABC PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 > a_;
-  mutable std::atomic<int> _a_cached_byte_size_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 > a_index_;
-  mutable std::atomic<int> _a_index_cached_byte_size_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 > a_notused_;
-  mutable std::atomic<int> _a_notused_cached_byte_size_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr b_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr b_notused_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr c_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr c_notused_;
-  ::test::ABC_Nested* d_;
-  ::test::ABC_Nested* d_notused_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_test_2eproto;
 };
@@ -563,603 +529,19 @@ class ABC PROTOBUF_FINAL :
 // ABC_Nested
 
 // bool value = 1;
-inline void ABC_Nested::clear_value() {
-  value_ = false;
-}
-inline bool ABC_Nested::_internal_value() const {
-  return value_;
-}
-inline bool ABC_Nested::value() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 0));
-  // @@protoc_insertion_point(field_get:test.ABC.Nested.value)
-  return _internal_value();
-}
-inline void ABC_Nested::_internal_set_value(bool value) {
-  
-  value_ = value;
-}
-inline void ABC_Nested::set_value(bool value) {
-  _internal_set_value(value);
-  // @@protoc_insertion_point(field_set:test.ABC.Nested.value)
-}
-
 // -------------------------------------------------------------------
 
 // ABC
 
 // repeated int64 a = 1;
-inline int ABC::_internal_a_size() const {
-  return a_.size();
-}
-inline int ABC::a_size() const {
-  return _internal_a_size();
-}
-inline void ABC::clear_a() {
-  a_.Clear();
-}
-inline ::PROTOBUF_NAMESPACE_ID::int64 ABC::_internal_a(int index) const {
-  return a_.Get(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::int64 ABC::a(int index) const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 0));
-  // @@protoc_insertion_point(field_get:test.ABC.a)
-  return _internal_a(index);
-}
-inline void ABC::set_a(int index, ::PROTOBUF_NAMESPACE_ID::int64 value) {
-  a_.Set(index, value);
-  // @@protoc_insertion_point(field_set:test.ABC.a)
-}
-inline void ABC::_internal_add_a(::PROTOBUF_NAMESPACE_ID::int64 value) {
-  a_.Add(value);
-}
-inline void ABC::add_a(::PROTOBUF_NAMESPACE_ID::int64 value) {
-  _internal_add_a(value);
-  // @@protoc_insertion_point(field_add:test.ABC.a)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
-ABC::_internal_a() const {
-  return a_;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
-ABC::a() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 0));
-  // @@protoc_insertion_point(field_list:test.ABC.a)
-  return _internal_a();
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >*
-ABC::_internal_mutable_a() {
-  return &a_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >*
-ABC::mutable_a() {
-  // @@protoc_insertion_point(field_mutable_list:test.ABC.a)
-  return _internal_mutable_a();
-}
-
 // repeated int64 a_index = 2;
-inline int ABC::_internal_a_index_size() const {
-  return a_index_.size();
-}
-inline int ABC::a_index_size() const {
-  return _internal_a_index_size();
-}
-inline void ABC::clear_a_index() {
-  a_index_.Clear();
-}
-inline ::PROTOBUF_NAMESPACE_ID::int64 ABC::_internal_a_index(int index) const {
-  return a_index_.Get(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::int64 ABC::a_index(int index) const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 1));
-  // @@protoc_insertion_point(field_get:test.ABC.a_index)
-  return _internal_a_index(index);
-}
-inline void ABC::set_a_index(int index, ::PROTOBUF_NAMESPACE_ID::int64 value) {
-  a_index_.Set(index, value);
-  // @@protoc_insertion_point(field_set:test.ABC.a_index)
-}
-inline void ABC::_internal_add_a_index(::PROTOBUF_NAMESPACE_ID::int64 value) {
-  a_index_.Add(value);
-}
-inline void ABC::add_a_index(::PROTOBUF_NAMESPACE_ID::int64 value) {
-  _internal_add_a_index(value);
-  // @@protoc_insertion_point(field_add:test.ABC.a_index)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
-ABC::_internal_a_index() const {
-  return a_index_;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
-ABC::a_index() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 1));
-  // @@protoc_insertion_point(field_list:test.ABC.a_index)
-  return _internal_a_index();
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >*
-ABC::_internal_mutable_a_index() {
-  return &a_index_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >*
-ABC::mutable_a_index() {
-  // @@protoc_insertion_point(field_mutable_list:test.ABC.a_index)
-  return _internal_mutable_a_index();
-}
-
 // repeated int64 a_notused = 3;
-inline int ABC::_internal_a_notused_size() const {
-  return a_notused_.size();
-}
-inline int ABC::a_notused_size() const {
-  return _internal_a_notused_size();
-}
-inline void ABC::clear_a_notused() {
-  a_notused_.Clear();
-}
-inline ::PROTOBUF_NAMESPACE_ID::int64 ABC::_internal_a_notused(int index) const {
-  return a_notused_.Get(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::int64 ABC::a_notused(int index) const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 2));
-  // @@protoc_insertion_point(field_get:test.ABC.a_notused)
-  return _internal_a_notused(index);
-}
-inline void ABC::set_a_notused(int index, ::PROTOBUF_NAMESPACE_ID::int64 value) {
-  a_notused_.Set(index, value);
-  // @@protoc_insertion_point(field_set:test.ABC.a_notused)
-}
-inline void ABC::_internal_add_a_notused(::PROTOBUF_NAMESPACE_ID::int64 value) {
-  a_notused_.Add(value);
-}
-inline void ABC::add_a_notused(::PROTOBUF_NAMESPACE_ID::int64 value) {
-  _internal_add_a_notused(value);
-  // @@protoc_insertion_point(field_add:test.ABC.a_notused)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
-ABC::_internal_a_notused() const {
-  return a_notused_;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >&
-ABC::a_notused() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 2));
-  // @@protoc_insertion_point(field_list:test.ABC.a_notused)
-  return _internal_a_notused();
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >*
-ABC::_internal_mutable_a_notused() {
-  return &a_notused_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int64 >*
-ABC::mutable_a_notused() {
-  // @@protoc_insertion_point(field_mutable_list:test.ABC.a_notused)
-  return _internal_mutable_a_notused();
-}
-
 // string b = 4;
-inline void ABC::clear_b() {
-  b_.ClearToEmpty();
-}
-inline const std::string& ABC::b() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 3));
-  // @@protoc_insertion_point(field_get:test.ABC.b)
-  return _internal_b();
-}
-inline void ABC::set_b(const std::string& value) {
-  _internal_set_b(value);
-  // @@protoc_insertion_point(field_set:test.ABC.b)
-}
-inline std::string* ABC::mutable_b() {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 3));
-  // @@protoc_insertion_point(field_mutable:test.ABC.b)
-  return _internal_mutable_b();
-}
-inline const std::string& ABC::_internal_b() const {
-  return b_.Get();
-}
-inline void ABC::_internal_set_b(const std::string& value) {
-  
-  b_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
-}
-inline void ABC::set_b(std::string&& value) {
-  
-  b_.Set(
-    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:test.ABC.b)
-}
-inline void ABC::set_b(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  b_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
-  // @@protoc_insertion_point(field_set_char:test.ABC.b)
-}
-inline void ABC::set_b(const char* value,
-    size_t size) {
-  
-  b_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
-      reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:test.ABC.b)
-}
-inline std::string* ABC::_internal_mutable_b() {
-  
-  return b_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
-}
-inline std::string* ABC::release_b() {
-  // @@protoc_insertion_point(field_release:test.ABC.b)
-  return b_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline void ABC::set_allocated_b(std::string* b) {
-  if (b != nullptr) {
-    
-  } else {
-    
-  }
-  b_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), b,
-      GetArena());
-  // @@protoc_insertion_point(field_set_allocated:test.ABC.b)
-}
-
 // string b_notused = 5;
-inline void ABC::clear_b_notused() {
-  b_notused_.ClearToEmpty();
-}
-inline const std::string& ABC::b_notused() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 4));
-  // @@protoc_insertion_point(field_get:test.ABC.b_notused)
-  return _internal_b_notused();
-}
-inline void ABC::set_b_notused(const std::string& value) {
-  _internal_set_b_notused(value);
-  // @@protoc_insertion_point(field_set:test.ABC.b_notused)
-}
-inline std::string* ABC::mutable_b_notused() {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 4));
-  // @@protoc_insertion_point(field_mutable:test.ABC.b_notused)
-  return _internal_mutable_b_notused();
-}
-inline const std::string& ABC::_internal_b_notused() const {
-  return b_notused_.Get();
-}
-inline void ABC::_internal_set_b_notused(const std::string& value) {
-  
-  b_notused_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
-}
-inline void ABC::set_b_notused(std::string&& value) {
-  
-  b_notused_.Set(
-    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:test.ABC.b_notused)
-}
-inline void ABC::set_b_notused(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  b_notused_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
-  // @@protoc_insertion_point(field_set_char:test.ABC.b_notused)
-}
-inline void ABC::set_b_notused(const char* value,
-    size_t size) {
-  
-  b_notused_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
-      reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:test.ABC.b_notused)
-}
-inline std::string* ABC::_internal_mutable_b_notused() {
-  
-  return b_notused_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
-}
-inline std::string* ABC::release_b_notused() {
-  // @@protoc_insertion_point(field_release:test.ABC.b_notused)
-  return b_notused_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline void ABC::set_allocated_b_notused(std::string* b_notused) {
-  if (b_notused != nullptr) {
-    
-  } else {
-    
-  }
-  b_notused_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), b_notused,
-      GetArena());
-  // @@protoc_insertion_point(field_set_allocated:test.ABC.b_notused)
-}
-
 // bytes c = 6;
-inline void ABC::clear_c() {
-  c_.ClearToEmpty();
-}
-inline const std::string& ABC::c() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 5));
-  // @@protoc_insertion_point(field_get:test.ABC.c)
-  return _internal_c();
-}
-inline void ABC::set_c(const std::string& value) {
-  _internal_set_c(value);
-  // @@protoc_insertion_point(field_set:test.ABC.c)
-}
-inline std::string* ABC::mutable_c() {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 5));
-  // @@protoc_insertion_point(field_mutable:test.ABC.c)
-  return _internal_mutable_c();
-}
-inline const std::string& ABC::_internal_c() const {
-  return c_.Get();
-}
-inline void ABC::_internal_set_c(const std::string& value) {
-  
-  c_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
-}
-inline void ABC::set_c(std::string&& value) {
-  
-  c_.Set(
-    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:test.ABC.c)
-}
-inline void ABC::set_c(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  c_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
-  // @@protoc_insertion_point(field_set_char:test.ABC.c)
-}
-inline void ABC::set_c(const void* value,
-    size_t size) {
-  
-  c_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
-      reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:test.ABC.c)
-}
-inline std::string* ABC::_internal_mutable_c() {
-  
-  return c_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
-}
-inline std::string* ABC::release_c() {
-  // @@protoc_insertion_point(field_release:test.ABC.c)
-  return c_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline void ABC::set_allocated_c(std::string* c) {
-  if (c != nullptr) {
-    
-  } else {
-    
-  }
-  c_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), c,
-      GetArena());
-  // @@protoc_insertion_point(field_set_allocated:test.ABC.c)
-}
-
 // bytes c_notused = 7;
-inline void ABC::clear_c_notused() {
-  c_notused_.ClearToEmpty();
-}
-inline const std::string& ABC::c_notused() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 6));
-  // @@protoc_insertion_point(field_get:test.ABC.c_notused)
-  return _internal_c_notused();
-}
-inline void ABC::set_c_notused(const std::string& value) {
-  _internal_set_c_notused(value);
-  // @@protoc_insertion_point(field_set:test.ABC.c_notused)
-}
-inline std::string* ABC::mutable_c_notused() {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 6));
-  // @@protoc_insertion_point(field_mutable:test.ABC.c_notused)
-  return _internal_mutable_c_notused();
-}
-inline const std::string& ABC::_internal_c_notused() const {
-  return c_notused_.Get();
-}
-inline void ABC::_internal_set_c_notused(const std::string& value) {
-  
-  c_notused_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
-}
-inline void ABC::set_c_notused(std::string&& value) {
-  
-  c_notused_.Set(
-    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:test.ABC.c_notused)
-}
-inline void ABC::set_c_notused(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  c_notused_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
-  // @@protoc_insertion_point(field_set_char:test.ABC.c_notused)
-}
-inline void ABC::set_c_notused(const void* value,
-    size_t size) {
-  
-  c_notused_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
-      reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:test.ABC.c_notused)
-}
-inline std::string* ABC::_internal_mutable_c_notused() {
-  
-  return c_notused_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
-}
-inline std::string* ABC::release_c_notused() {
-  // @@protoc_insertion_point(field_release:test.ABC.c_notused)
-  return c_notused_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline void ABC::set_allocated_c_notused(std::string* c_notused) {
-  if (c_notused != nullptr) {
-    
-  } else {
-    
-  }
-  c_notused_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), c_notused,
-      GetArena());
-  // @@protoc_insertion_point(field_set_allocated:test.ABC.c_notused)
-}
-
 // .test.ABC.Nested d = 8;
-inline bool ABC::_internal_has_d() const {
-  return this != internal_default_instance() && d_ != nullptr;
-}
-inline bool ABC::has_d() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 7));
-  // @@protoc_insertion_point(field_has:test.ABC.d)
-  return _internal_has_d();
-}
-inline void ABC::clear_d() {
-  if (GetArena() == nullptr && d_ != nullptr) {
-    delete d_;
-  }
-  d_ = nullptr;
-}
-inline const ::test::ABC_Nested& ABC::_internal_d() const {
-  const ::test::ABC_Nested* p = d_;
-  return p != nullptr ? *p : reinterpret_cast<const ::test::ABC_Nested&>(
-      ::test::_ABC_Nested_default_instance_);
-}
-inline const ::test::ABC_Nested& ABC::d() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 7));
-  // @@protoc_insertion_point(field_get:test.ABC.d)
-  return _internal_d();
-}
-inline void ABC::unsafe_arena_set_allocated_d(
-    ::test::ABC_Nested* d) {
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(d_);
-  }
-  d_ = d;
-  if (d) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:test.ABC.d)
-}
-inline ::test::ABC_Nested* ABC::release_d() {
-  
-  ::test::ABC_Nested* temp = d_;
-  d_ = nullptr;
-  if (GetArena() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-  return temp;
-}
-inline ::test::ABC_Nested* ABC::unsafe_arena_release_d() {
-  // @@protoc_insertion_point(field_release:test.ABC.d)
-  
-  ::test::ABC_Nested* temp = d_;
-  d_ = nullptr;
-  return temp;
-}
-inline ::test::ABC_Nested* ABC::_internal_mutable_d() {
-  
-  if (d_ == nullptr) {
-    auto* p = CreateMaybeMessage<::test::ABC_Nested>(GetArena());
-    d_ = p;
-  }
-  return d_;
-}
-inline ::test::ABC_Nested* ABC::mutable_d() {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 7));
-  // @@protoc_insertion_point(field_mutable:test.ABC.d)
-  return _internal_mutable_d();
-}
-inline void ABC::set_allocated_d(::test::ABC_Nested* d) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
-  if (message_arena == nullptr) {
-    delete d_;
-  }
-  if (d) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(d);
-    if (message_arena != submessage_arena) {
-      d = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, d, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  d_ = d;
-  // @@protoc_insertion_point(field_set_allocated:test.ABC.d)
-}
-
 // .test.ABC.Nested d_notused = 9;
-inline bool ABC::_internal_has_d_notused() const {
-  return this != internal_default_instance() && d_notused_ != nullptr;
-}
-inline bool ABC::has_d_notused() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 8));
-  // @@protoc_insertion_point(field_has:test.ABC.d_notused)
-  return _internal_has_d_notused();
-}
-inline void ABC::clear_d_notused() {
-  if (GetArena() == nullptr && d_notused_ != nullptr) {
-    delete d_notused_;
-  }
-  d_notused_ = nullptr;
-}
-inline const ::test::ABC_Nested& ABC::_internal_d_notused() const {
-  const ::test::ABC_Nested* p = d_notused_;
-  return p != nullptr ? *p : reinterpret_cast<const ::test::ABC_Nested&>(
-      ::test::_ABC_Nested_default_instance_);
-}
-inline const ::test::ABC_Nested& ABC::d_notused() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 8));
-  // @@protoc_insertion_point(field_get:test.ABC.d_notused)
-  return _internal_d_notused();
-}
-inline void ABC::unsafe_arena_set_allocated_d_notused(
-    ::test::ABC_Nested* d_notused) {
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(d_notused_);
-  }
-  d_notused_ = d_notused;
-  if (d_notused) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:test.ABC.d_notused)
-}
-inline ::test::ABC_Nested* ABC::release_d_notused() {
-  
-  ::test::ABC_Nested* temp = d_notused_;
-  d_notused_ = nullptr;
-  if (GetArena() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-  return temp;
-}
-inline ::test::ABC_Nested* ABC::unsafe_arena_release_d_notused() {
-  // @@protoc_insertion_point(field_release:test.ABC.d_notused)
-  
-  ::test::ABC_Nested* temp = d_notused_;
-  d_notused_ = nullptr;
-  return temp;
-}
-inline ::test::ABC_Nested* ABC::_internal_mutable_d_notused() {
-  
-  if (d_notused_ == nullptr) {
-    auto* p = CreateMaybeMessage<::test::ABC_Nested>(GetArena());
-    d_notused_ = p;
-  }
-  return d_notused_;
-}
-inline ::test::ABC_Nested* ABC::mutable_d_notused() {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 8));
-  // @@protoc_insertion_point(field_mutable:test.ABC.d_notused)
-  return _internal_mutable_d_notused();
-}
-inline void ABC::set_allocated_d_notused(::test::ABC_Nested* d_notused) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
-  if (message_arena == nullptr) {
-    delete d_notused_;
-  }
-  if (d_notused) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(d_notused);
-    if (message_arena != submessage_arena) {
-      d_notused = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, d_notused, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  d_notused_ = d_notused;
-  // @@protoc_insertion_point(field_set_allocated:test.ABC.d_notused)
-}
-
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__

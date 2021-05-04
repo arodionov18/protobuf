@@ -461,7 +461,7 @@ class ColdChunkSkipper {
 
   const std::vector<std::vector<const FieldDescriptor*>>& chunks_;
   const std::vector<int>& has_bit_indices_;
-  const AccessInfoMap* access_info_map_;
+  const std::shared_ptr<AccessInfoMap> access_info_map_;
   const double cold_threshold_;
   std::map<std::string, std::string> variables_;
   int limit_chunk_ = -1;
@@ -952,6 +952,7 @@ void MessageGenerator::GenerateFieldAccessorDefinitions(io::Printer* printer) {
             "}\n"
             "inline int $classname$::$name$_size() const {\n"
             "$annotate_accessor$"
+            "  // @@protoc_insertion_point(field_size:$full_name$.$name$)\n"
             "  return _internal_$name$_size();\n"
             "}\n",
             IsImplicitWeakField(field, options_, scc_analyzer_) &&
@@ -1893,6 +1894,7 @@ void MessageGenerator::GenerateClassMethods(io::Printer* printer) {
     if (HasDescriptorMethods(descriptor_->file(), options_)) {
       format(
           "::$proto_ns$::Metadata $classname$::GetMetadata() const {\n"
+          "  // @@protoc_insertion_point(get_metadata:$full_name$)\n"
           "  return GetMetadataStatic();\n"
           "}\n");
       format(
@@ -2033,6 +2035,7 @@ void MessageGenerator::GenerateClassMethods(io::Printer* printer) {
   if (HasDescriptorMethods(descriptor_->file(), options_)) {
     format(
         "::$proto_ns$::Metadata $classname$::GetMetadata() const {\n"
+        "  // @@protoc_insertion_point(get_metadata:$full_name$)\n"
         "  return GetMetadataStatic();\n"
         "}\n"
         "\n");

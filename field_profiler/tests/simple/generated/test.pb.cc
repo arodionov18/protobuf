@@ -18,9 +18,7 @@
 PROTOBUF_PRAGMA_INIT_SEG
 namespace test {
 constexpr ABC::ABC(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : b_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
-  , a_(PROTOBUF_LONGLONG(0)){}
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized){}
 struct ABCDefaultTypeInternal {
   constexpr ABCDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -36,18 +34,16 @@ static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_test_2eproto = nullptr;
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_test_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  PROTOBUF_FIELD_OFFSET(::test::ABC, _has_bits_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::test::ABC, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::test::ABC, a_),
-  PROTOBUF_FIELD_OFFSET(::test::ABC, b_),
-  ~0u,
-  0,
+  ~0u,  // stripped
+  ~0u,  // stripped
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 7, sizeof(::test::ABC)},
+  { 0, -1, sizeof(::test::ABC)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -79,10 +75,6 @@ namespace test {
 
 class ABC::_Internal {
  public:
-  using HasBits = decltype(std::declval<ABC>()._has_bits_);
-  static void set_has_b(HasBits* has_bits) {
-    (*has_bits)[0] |= 1u;
-  }
 };
 
 ABC::ABC(::PROTOBUF_NAMESPACE_ID::Arena* arena)
@@ -92,21 +84,12 @@ ABC::ABC(::PROTOBUF_NAMESPACE_ID::Arena* arena)
   // @@protoc_insertion_point(arena_constructor:test.ABC)
 }
 ABC::ABC(const ABC& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _has_bits_(from._has_bits_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  b_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (from._internal_has_b()) {
-    b_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_b(), 
-      GetArena());
-  }
-  a_ = from.a_;
   // @@protoc_insertion_point(copy_constructor:test.ABC)
 }
 
 void ABC::SharedCtor() {
-b_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-a_ = PROTOBUF_LONGLONG(0);
 }
 
 ABC::~ABC() {
@@ -117,7 +100,6 @@ ABC::~ABC() {
 
 void ABC::SharedDtor() {
   GOOGLE_DCHECK(GetArena() == nullptr);
-  b_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void ABC::ArenaDtor(void* object) {
@@ -136,41 +118,15 @@ void ABC::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    b_.ClearNonDefaultToEmpty();
-  }
-  a_ = PROTOBUF_LONGLONG(0);
-  _has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* ABC::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  _Internal::HasBits has_bits{};
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
-    switch (tag >> 3) {
-      // int64 a = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          a_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // string b = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          auto str = _internal_mutable_b();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "test.ABC.b"));
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
         if ((tag & 7) == 4 || tag == 0) {
           ctx->SetLastTag(tag);
           goto success;
@@ -180,11 +136,8 @@ const char* ABC::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::intern
             ptr, ctx);
         CHK_(ptr != nullptr);
         continue;
-      }
-    }  // switch
   }  // while
 success:
-  _has_bits_.Or(has_bits);
   return ptr;
 failure:
   ptr = nullptr;
@@ -197,22 +150,6 @@ failure:
   // @@protoc_insertion_point(serialize_to_array_start:test.ABC)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
-
-  // int64 a = 1;
-  if (this->a() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(1, this->_internal_a(), target);
-  }
-
-  // string b = 2;
-  if (_internal_has_b()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_b().data(), static_cast<int>(this->_internal_b().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "test.ABC.b");
-    target = stream->WriteStringMaybeAliased(
-        2, this->_internal_b(), target);
-  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -229,21 +166,6 @@ size_t ABC::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
-
-  // string b = 2;
-  cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_b());
-  }
-
-  // int64 a = 1;
-  if (this->a() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64Size(
-        this->_internal_a());
-  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
@@ -276,12 +198,6 @@ void ABC::MergeFrom(const ABC& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_has_b()) {
-    _internal_set_b(from._internal_b());
-  }
-  if (from.a() != 0) {
-    _internal_set_a(from._internal_a());
-  }
 }
 
 void ABC::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -305,12 +221,10 @@ bool ABC::IsInitialized() const {
 void ABC::InternalSwap(ABC* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
-  b_.Swap(&other->b_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  swap(a_, other->a_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata ABC::GetMetadata() const {
+  // @@protoc_insertion_point(get_metadata:test.ABC)
   return GetMetadataStatic();
 }
 

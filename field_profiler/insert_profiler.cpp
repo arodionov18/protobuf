@@ -3,6 +3,8 @@
 #include <iostream>
 #include <memory>
 
+bool is_fields_stripped = false;
+
 void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator_context) {
     std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> stream(generator_context->Open("tracker.h"));
     google::protobuf::io::Printer printer(stream.get(), '$');
@@ -18,6 +20,7 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Indent();
     printer.Print("const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor;\n");
     printer.Print("std::atomic<uint32_t>** bitmap;\n");
+    printer.Print("std::atomic<uint32_t>* state;\n");
     printer.Outdent();
     printer.Print("};\n");
 
@@ -26,9 +29,9 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Print("class DynamicTracker {\n");
     printer.Print("public:\n");
     printer.Indent();
-    printer.Print("static void RegisterProto(const ::PROTOBUF_NAMESPACE_ID::Descriptor* d, std::atomic<uint32_t>** b) {\n");
+    printer.Print("static void RegisterProto(const ::PROTOBUF_NAMESPACE_ID::Descriptor* d, std::atomic<uint32_t>** b, std::atomic<uint32_t>* s) {\n");
     printer.Indent();
-    printer.Print("map_.insert({d->full_name(), {d, b}});\n");
+    printer.Print("map_.insert({d->full_name(), {d, b, s}});\n");
     printer.Outdent();
     printer.Print("}\n");
     printer.Print("\n");
@@ -40,18 +43,73 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Print("for (const auto& elem: map_) {\n");
     printer.Indent();
     printer.Print("// each message\n");
-    printer.Print("dump_file << elem.first << std::endl;\n");
+    //printer.Print("dump_file << elem.first << std::endl;\n");
+    printer.Print("std::string message_state = \"not_used\";\n");
+    printer.Print("switch(elem.second.state->load()) {\n");
+    printer.Indent();
+    printer.Print("case 1:\n");
+    printer.Indent();
+    printer.Print("message_state = \"serialized\";\n");
+    printer.Print("break;\n");
+    printer.Outdent();
+    printer.Print("case 2:\n");
+    printer.Print("case 3:\n");
+    printer.Indent();
+    printer.Print("message_state = \"get_metadata\";\n");
+    printer.Print("break;\n");
+    printer.Outdent();
+    printer.Print("case 4:\n");
+    printer.Print("case 5:\n");
+    printer.Print("case 6:\n");
+    printer.Print("case 7:\n");
+    printer.Indent();
+    printer.Print("message_state = \"getters\";\n");
+    printer.Outdent();
+    printer.Print("default:\n");
+    printer.Indent();
+    printer.Print("break;\n");
+    printer.Outdent();
+    printer.Outdent();
+    printer.Print("}\n");
+    printer.Print("dump_file << elem.first << \" \" << message_state << std::endl;\n");
+    printer.Print("if (message_state == \"not_used\" || message_state == \"serialized\" || message_state == \"get_metadata\") {\n");
+    printer.Indent();
+    printer.Print("dump_file.close();\n");
+    printer.Print("return;\n");
+    printer.Outdent();
+    printer.Print("}\n");
     printer.Print("for (size_t i = 0; i < elem.second.descriptor->field_count(); ++i) {\n");
     printer.Indent();
     printer.Print("int index = i / 32;\n");
     printer.Print("uint32_t index_in_bitmap = 1U << (i % 32);\n");
     printer.Print("int is_used = ((*elem.second.bitmap)[index].load() & index_in_bitmap) >> (i % 32);\n");
-    printer.Print("dump_file << \"\\t\" << elem.second.descriptor->field(i)->full_name() << \", is used: \" << is_used << std::endl;\n");
+    printer.Print("dump_file << \"\\t\" << elem.second.descriptor->field(i)->full_name() << \"\t\" << is_used << std::endl;\n");
     printer.Outdent();
     printer.Print("}\n");
     printer.Outdent();
     printer.Print("}\n");
     printer.Print("dump_file.close();\n");
+    printer.Outdent();
+    printer.Print("}\n");
+
+    printer.Print("static std::unordered_map<std::string, std::string> DumpStatistics() {\n");
+    printer.Indent();
+    printer.Print("std::unordered_map<std::string, std::string> result;\n");
+    printer.Print("for (const auto& elem: map_) {\n");
+    printer.Indent();
+    printer.Print("for (size_t i = 0; i < elem.second.descriptor->field_count(); ++i) {\n");
+    printer.Indent();
+    printer.Print(
+        "int index = i / 32;\n"
+        "uint32_t index_in_bitmap = 1U << (i % 32);\n"
+        "int is_used = ((*elem.second.bitmap)[index].load() & index_in_bitmap) >> (i % 32);\n"
+        "result[elem.second.descriptor->field(i)->full_name()] = is_used ? \"used\" : \"unused\";\n"
+    );
+    printer.Outdent();
+    printer.Print("}\n");
+    printer.Outdent();
+    printer.Print("}\n");
+    printer.Print("return result;\n");
     printer.Outdent();
     printer.Print("}\n");
     // End: Get statistics
@@ -76,7 +134,7 @@ void GenerateMessageTracker(google::protobuf::compiler::GeneratorContext* genera
     printer.Print("Tracker() {\n");
     printer.Indent();
     printer.Print(vars, "bitmap_ = new std::atomic<uint32_t>[$message_field_number$ / 32 + ($message_field_number$ % 32 != 0)];\n");
-    printer.Print(vars, "DynamicTracker::RegisterProto($message_name$::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_);\n");
+    printer.Print(vars, "DynamicTracker::RegisterProto($message_name$::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_, (std::atomic<uint32_t>*)&state_);\n");
     printer.Outdent();
     printer.Print("}\n\n");
     printer.Print("~Tracker() {\n");
@@ -90,6 +148,7 @@ void GenerateMessageTracker(google::protobuf::compiler::GeneratorContext* genera
     printer.Indent();
     // should it be static??
     printer.Print(vars, "std::atomic<uint32_t>* bitmap_;\n");
+    printer.Print("std::atomic<uint32_t> state_;\n");
     printer.Outdent();
     printer.Print("};\n");
 
@@ -137,37 +196,57 @@ void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_con
         pb_namespace_scope_printer.Print((name + "::Tracker " + name + "::tracker_ = {};\n").c_str());
     }
 
-    for (size_t j = 0; j < message_type->field_count(); ++j)
-    {
+    if (is_fields_stripped) {
+        return;
+    }
+
+    { // InternalSerialize
+        std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_h_getters(generator_context->OpenForInsert(filename + ".pb.cc", "serialize_to_array_start:" + message_type->full_name()));
+        google::protobuf::io::Printer pb_includes(out_h_getters.get(), '$');
+        pb_includes.Print("tracker_.state_.fetch_or(1);\n");
+    }
+
+    for (size_t j = 0; j < message_type->field_count(); ++j) {
         auto field = message_type->field(j);
 
         std::cerr << "\t" << field->full_name() << std::endl;
 
-        std::vector<std::string> points = {"field_get:"};
-        if (HasMutableGetter(field))
-        {
-            points.push_back("field_mutable:");
+        std::vector<std::string> points;
+
+        if (field->is_map()) {
+            points.push_back("field_map:");
+        } else {
+            points.push_back("field_get:");
         }
 
-        if (HasHasGetter(field))
-        {
+        if (HasMutableGetter(field)) {
+            if (field->is_map()) {
+                points.push_back("field_mutable_map:");
+            } else {
+                points.push_back("field_mutable:");
+            }
+        }
+
+        if (HasHasGetter(field)) {
             points.push_back("field_has:");
         }
 
-        if (field->is_repeated())
-        {
-            points.push_back("field_list:");
+        if (field->is_repeated()) {
+            if (!field->is_map()) {
+                points.push_back("field_list:");
+            }
+            points.push_back("field_size:");
         }
 
-        for (const auto &point : points)
-        {
+        for (const auto &point : points) {
             std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_h_getters(generator_context->OpenForInsert(filename + ".pb.h", point + field->full_name()));
             google::protobuf::io::Printer pb_includes(out_h_getters.get(), '$');
 
             vars["array_index"] = std::to_string(j / 32);
             vars["shift_index"] = std::to_string(j % 32);
 
-            pb_includes.Print(vars, "tracker_.bitmap_[$array_index$].store((tracker_.bitmap_[$array_index$].load()) | (1U << $shift_index$));\n");
+            pb_includes.Print(vars, "tracker_.bitmap_[$array_index$].fetch_or(1U << $shift_index$);\n");
+            pb_includes.Print(vars, "tracker_.state_.fetch_or(4);\n");
         }
     }
 }
@@ -177,6 +256,16 @@ bool ProfilerGenerator::Generate(const google::protobuf::FileDescriptor *file,
                           google::protobuf::compiler::GeneratorContext *generator_context,
                           std::string *error) const
 {
+    std::vector<std::pair<std::string, std::string> > options;
+    google::protobuf::compiler::ParseGeneratorParameter(parameter, &options);
+
+
+    for (int i = 0; i < options.size(); i++) {
+        if (options[i].first == "unused_field_stripping") {
+            is_fields_stripped = true;
+        }
+    }
+
     auto filename = file->name();
     filename = filename.substr(0, filename.size() - 6);
 
@@ -197,7 +286,7 @@ bool ProfilerGenerator::Generate(const google::protobuf::FileDescriptor *file,
         messages.insert({message_type->full_name(), {message_type, message_type->name()}});
         for (size_t j = 0; j < message_type->field_count(); ++j) {
             auto field_type = message_type->field(j);
-            if (field_type->message_type() != nullptr) {
+            if (field_type->message_type() != nullptr && !field_type->is_map()) {
                 messages.insert({field_type->message_type()->full_name(), {field_type->message_type(), message_type->name() + "_" + field_type->message_type()->name()}});
             }
         }

@@ -34,11 +34,13 @@
 #define GOOGLE_PROTOBUF_COMPILER_CPP_OPTIONS_H__
 
 #include <string>
+#include <memory>
+
+#include <google/protobuf/compiler/cpp/cpp_access_info_map.h>
 
 namespace google {
 namespace protobuf {
 namespace compiler {
-class AccessInfoMap;
 
 namespace cpp {
 
@@ -68,7 +70,7 @@ struct Options {
   int num_cc_files = 0;
   std::string annotation_pragma_name;
   std::string annotation_guard_name;
-  const AccessInfoMap* access_info_map = nullptr;
+  std::shared_ptr<AccessInfoMap> access_info_map;
 };
 
 }  // namespace cpp

@@ -180,15 +180,21 @@ class ABC PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kBFieldNumber = 2,
     kAFieldNumber = 1,
+    kBFieldNumber = 2,
   };
-  // string b = 2;
-  bool has_b() const;
+  // int64 a = 1;
+  void clear_a(){__builtin_trap();}
+  ::PROTOBUF_NAMESPACE_ID::int64 a() const;
+  void set_a(::PROTOBUF_NAMESPACE_ID::int64 value);
   private:
-  bool _internal_has_b() const;
+  ::PROTOBUF_NAMESPACE_ID::int64 _internal_a() const;
+  void _internal_set_a(::PROTOBUF_NAMESPACE_ID::int64 value);
   public:
-  void clear_b();
+
+  // string b = 2;
+  bool has_b() const {__builtin_trap();}
+  void clear_b(){__builtin_trap();}
   const std::string& b() const;
   void set_b(const std::string& value);
   void set_b(std::string&& value);
@@ -203,27 +209,19 @@ class ABC PROTOBUF_FINAL :
   std::string* _internal_mutable_b();
   public:
 
-  // int64 a = 1;
-  void clear_a();
-  ::PROTOBUF_NAMESPACE_ID::int64 a() const;
-  void set_a(::PROTOBUF_NAMESPACE_ID::int64 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int64 _internal_a() const;
-  void _internal_set_a(::PROTOBUF_NAMESPACE_ID::int64 value);
-  public:
-
   private:
     class Tracker {
     public:
       Tracker() {
         bitmap_ = new std::atomic<uint32_t>[2 / 32 + (2 % 32 != 0)];
-        DynamicTracker::RegisterProto(ABC::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_);
+        DynamicTracker::RegisterProto(ABC::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_, (std::atomic<uint32_t>*)&state_);
       }
   
       ~Tracker() {
         delete [] bitmap_;
       }
       std::atomic<uint32_t>* bitmap_;
+      std::atomic<uint32_t> state_;
     };
   public:
     static Tracker tracker_;
@@ -234,10 +232,7 @@ class ABC PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr b_;
-  ::PROTOBUF_NAMESPACE_ID::int64 a_;
   friend struct ::TableStruct_test_2eproto;
 };
 // ===================================================================
@@ -252,103 +247,7 @@ class ABC PROTOBUF_FINAL :
 // ABC
 
 // int64 a = 1;
-inline void ABC::clear_a() {
-  a_ = PROTOBUF_LONGLONG(0);
-}
-inline ::PROTOBUF_NAMESPACE_ID::int64 ABC::_internal_a() const {
-  return a_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int64 ABC::a() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 0));
-  // @@protoc_insertion_point(field_get:test.ABC.a)
-  return _internal_a();
-}
-inline void ABC::_internal_set_a(::PROTOBUF_NAMESPACE_ID::int64 value) {
-  
-  a_ = value;
-}
-inline void ABC::set_a(::PROTOBUF_NAMESPACE_ID::int64 value) {
-  _internal_set_a(value);
-  // @@protoc_insertion_point(field_set:test.ABC.a)
-}
-
 // string b = 2;
-inline bool ABC::_internal_has_b() const {
-  bool value = (_has_bits_[0] & 0x00000001u) != 0;
-  return value;
-}
-inline bool ABC::has_b() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 1));
-  // @@protoc_insertion_point(field_has:test.ABC.b)
-  return _internal_has_b();
-}
-inline void ABC::clear_b() {
-  b_.ClearToEmpty();
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline const std::string& ABC::b() const {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 1));
-  // @@protoc_insertion_point(field_get:test.ABC.b)
-  return _internal_b();
-}
-inline void ABC::set_b(const std::string& value) {
-  _internal_set_b(value);
-  // @@protoc_insertion_point(field_set:test.ABC.b)
-}
-inline std::string* ABC::mutable_b() {
-  tracker_.bitmap_[0].store((tracker_.bitmap_[0].load()) | (1U << 1));
-  // @@protoc_insertion_point(field_mutable:test.ABC.b)
-  return _internal_mutable_b();
-}
-inline const std::string& ABC::_internal_b() const {
-  return b_.Get();
-}
-inline void ABC::_internal_set_b(const std::string& value) {
-  _has_bits_[0] |= 0x00000001u;
-  b_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
-}
-inline void ABC::set_b(std::string&& value) {
-  _has_bits_[0] |= 0x00000001u;
-  b_.Set(
-    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:test.ABC.b)
-}
-inline void ABC::set_b(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  _has_bits_[0] |= 0x00000001u;
-  b_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
-  // @@protoc_insertion_point(field_set_char:test.ABC.b)
-}
-inline void ABC::set_b(const char* value,
-    size_t size) {
-  _has_bits_[0] |= 0x00000001u;
-  b_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
-      reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:test.ABC.b)
-}
-inline std::string* ABC::_internal_mutable_b() {
-  _has_bits_[0] |= 0x00000001u;
-  return b_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
-}
-inline std::string* ABC::release_b() {
-  // @@protoc_insertion_point(field_release:test.ABC.b)
-  if (!_internal_has_b()) {
-    return nullptr;
-  }
-  _has_bits_[0] &= ~0x00000001u;
-  return b_.ReleaseNonDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline void ABC::set_allocated_b(std::string* b) {
-  if (b != nullptr) {
-    _has_bits_[0] |= 0x00000001u;
-  } else {
-    _has_bits_[0] &= ~0x00000001u;
-  }
-  b_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), b,
-      GetArena());
-  // @@protoc_insertion_point(field_set_allocated:test.ABC.b)
-}
-
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__

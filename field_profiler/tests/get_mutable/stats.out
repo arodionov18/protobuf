@@ -1,12 +1,12 @@
-test.ABC.Nested
-	test.ABC.Nested.value, is used: 1
-test.ABC
-	test.ABC.a, is used: 1
-	test.ABC.a_index, is used: 1
-	test.ABC.a_notused, is used: 0
-	test.ABC.b, is used: 1
-	test.ABC.b_notused, is used: 0
-	test.ABC.c, is used: 1
-	test.ABC.c_notused, is used: 0
-	test.ABC.d, is used: 1
-	test.ABC.d_notused, is used: 0
+test.ABC.Nested getters
+	test.ABC.Nested.value	1
+test.ABC getters
+	test.ABC.a	1
+	test.ABC.a_index	1
+	test.ABC.a_notused	0
+	test.ABC.b	1
+	test.ABC.b_notused	0
+	test.ABC.c	1
+	test.ABC.c_notused	0
+	test.ABC.d	1
+	test.ABC.d_notused	0

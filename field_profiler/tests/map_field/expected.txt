@@ -1,0 +1,3 @@
+test.ABC getters
+	test.ABC.map_used	1
+	test.ABC.map_unused	0
