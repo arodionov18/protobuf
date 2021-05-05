@@ -18,7 +18,8 @@
 PROTOBUF_PRAGMA_INIT_SEG
 namespace test {
 constexpr ABC_Nested::ABC_Nested(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized){}
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : value_(false){}
 struct ABC_NestedDefaultTypeInternal {
   constexpr ABC_NestedDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -29,7 +30,19 @@ struct ABC_NestedDefaultTypeInternal {
 };
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_NO_DESTROY ABC_NestedDefaultTypeInternal _ABC_Nested_default_instance_;
 constexpr ABC::ABC(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized){}
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : a_()
+  , _a_cached_byte_size_()
+  , a_index_()
+  , _a_index_cached_byte_size_()
+  , a_notused_()
+  , _a_notused_cached_byte_size_()
+  , b_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , b_notused_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , c_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , c_notused_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , d_(nullptr)
+  , d_notused_(nullptr){}
 struct ABCDefaultTypeInternal {
   constexpr ABCDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -50,21 +63,21 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_test_2eproto::offsets[] PROTOB
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  ~0u,  // stripped
+  PROTOBUF_FIELD_OFFSET(::test::ABC_Nested, value_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::test::ABC, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  ~0u,  // stripped
-  ~0u,  // stripped
-  ~0u,  // stripped
-  ~0u,  // stripped
-  ~0u,  // stripped
-  ~0u,  // stripped
-  ~0u,  // stripped
-  ~0u,  // stripped
-  ~0u,  // stripped
+  PROTOBUF_FIELD_OFFSET(::test::ABC, a_),
+  PROTOBUF_FIELD_OFFSET(::test::ABC, a_index_),
+  PROTOBUF_FIELD_OFFSET(::test::ABC, a_notused_),
+  PROTOBUF_FIELD_OFFSET(::test::ABC, b_),
+  PROTOBUF_FIELD_OFFSET(::test::ABC, b_notused_),
+  PROTOBUF_FIELD_OFFSET(::test::ABC, c_),
+  PROTOBUF_FIELD_OFFSET(::test::ABC, c_notused_),
+  PROTOBUF_FIELD_OFFSET(::test::ABC, d_),
+  PROTOBUF_FIELD_OFFSET(::test::ABC, d_notused_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::test::ABC_Nested)},
@@ -116,10 +129,12 @@ ABC_Nested::ABC_Nested(::PROTOBUF_NAMESPACE_ID::Arena* arena)
 ABC_Nested::ABC_Nested(const ABC_Nested& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  value_ = from.value_;
   // @@protoc_insertion_point(copy_constructor:test.ABC.Nested)
 }
 
 void ABC_Nested::SharedCtor() {
+value_ = false;
 }
 
 ABC_Nested::~ABC_Nested() {
@@ -148,6 +163,7 @@ void ABC_Nested::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  value_ = false;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -157,6 +173,16 @@ const char* ABC_Nested::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID:
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
+    switch (tag >> 3) {
+      // bool value = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          value_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
         if ((tag & 7) == 4 || tag == 0) {
           ctx->SetLastTag(tag);
           goto success;
@@ -166,6 +192,8 @@ const char* ABC_Nested::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID:
             ptr, ctx);
         CHK_(ptr != nullptr);
         continue;
+      }
+    }  // switch
   }  // while
 success:
   return ptr;
@@ -177,9 +205,16 @@ failure:
 
 ::PROTOBUF_NAMESPACE_ID::uint8* ABC_Nested::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  tracker_.state_.fetch_or(1);
   // @@protoc_insertion_point(serialize_to_array_start:test.ABC.Nested)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
+
+  // bool value = 1;
+  if (this->value() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->_internal_value(), target);
+  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -196,6 +231,11 @@ size_t ABC_Nested::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // bool value = 1;
+  if (this->value() != 0) {
+    total_size += 1 + 1;
+  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
@@ -228,6 +268,9 @@ void ABC_Nested::MergeFrom(const ABC_Nested& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from.value() != 0) {
+    _internal_set_value(from._internal_value());
+  }
 }
 
 void ABC_Nested::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -251,6 +294,7 @@ bool ABC_Nested::IsInitialized() const {
 void ABC_Nested::InternalSwap(ABC_Nested* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  swap(value_, other->value_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata ABC_Nested::GetMetadata() const {
@@ -267,19 +311,71 @@ class ABC::_Internal {
   static const ::test::ABC_Nested& d_notused(const ABC* msg);
 };
 
+const ::test::ABC_Nested&
+ABC::_Internal::d(const ABC* msg) {
+  return *msg->d_;
+}
+const ::test::ABC_Nested&
+ABC::_Internal::d_notused(const ABC* msg) {
+  return *msg->d_notused_;
+}
 ABC::ABC(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
+  a_(arena),
+  a_index_(arena),
+  a_notused_(arena) {
   SharedCtor();
   RegisterArenaDtor(arena);
   // @@protoc_insertion_point(arena_constructor:test.ABC)
 }
 ABC::ABC(const ABC& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      a_(from.a_),
+      a_index_(from.a_index_),
+      a_notused_(from.a_notused_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  b_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_b().empty()) {
+    b_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_b(), 
+      GetArena());
+  }
+  b_notused_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_b_notused().empty()) {
+    b_notused_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_b_notused(), 
+      GetArena());
+  }
+  c_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_c().empty()) {
+    c_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_c(), 
+      GetArena());
+  }
+  c_notused_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_c_notused().empty()) {
+    c_notused_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_c_notused(), 
+      GetArena());
+  }
+  if (from._internal_has_d()) {
+    d_ = new ::test::ABC_Nested(*from.d_);
+  } else {
+    d_ = nullptr;
+  }
+  if (from._internal_has_d_notused()) {
+    d_notused_ = new ::test::ABC_Nested(*from.d_notused_);
+  } else {
+    d_notused_ = nullptr;
+  }
   // @@protoc_insertion_point(copy_constructor:test.ABC)
 }
 
 void ABC::SharedCtor() {
+b_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+b_notused_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+c_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+c_notused_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&d_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&d_notused_) -
+    reinterpret_cast<char*>(&d_)) + sizeof(d_notused_));
 }
 
 ABC::~ABC() {
@@ -290,6 +386,12 @@ ABC::~ABC() {
 
 void ABC::SharedDtor() {
   GOOGLE_DCHECK(GetArena() == nullptr);
+  b_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  b_notused_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  c_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  c_notused_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (this != internal_default_instance()) delete d_;
+  if (this != internal_default_instance()) delete d_notused_;
 }
 
 void ABC::ArenaDtor(void* object) {
@@ -308,6 +410,21 @@ void ABC::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  a_.Clear();
+  a_index_.Clear();
+  a_notused_.Clear();
+  b_.ClearToEmpty();
+  b_notused_.ClearToEmpty();
+  c_.ClearToEmpty();
+  c_notused_.ClearToEmpty();
+  if (GetArena() == nullptr && d_ != nullptr) {
+    delete d_;
+  }
+  d_ = nullptr;
+  if (GetArena() == nullptr && d_notused_ != nullptr) {
+    delete d_notused_;
+  }
+  d_notused_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -317,6 +434,87 @@ const char* ABC::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::intern
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
+    switch (tag >> 3) {
+      // repeated int64 a = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt64Parser(_internal_mutable_a(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8) {
+          _internal_add_a(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated int64 a_index = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt64Parser(_internal_mutable_a_index(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16) {
+          _internal_add_a_index(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated int64 a_notused = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt64Parser(_internal_mutable_a_notused(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24) {
+          _internal_add_a_notused(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // string b = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          auto str = _internal_mutable_b();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "test.ABC.b"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // string b_notused = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          auto str = _internal_mutable_b_notused();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "test.ABC.b_notused"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes c = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 50)) {
+          auto str = _internal_mutable_c();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes c_notused = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 58)) {
+          auto str = _internal_mutable_c_notused();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .test.ABC.Nested d = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 66)) {
+          ptr = ctx->ParseMessage(_internal_mutable_d(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .test.ABC.Nested d_notused = 9;
+      case 9:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 74)) {
+          ptr = ctx->ParseMessage(_internal_mutable_d_notused(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
         if ((tag & 7) == 4 || tag == 0) {
           ctx->SetLastTag(tag);
           goto success;
@@ -326,6 +524,8 @@ const char* ABC::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::intern
             ptr, ctx);
         CHK_(ptr != nullptr);
         continue;
+      }
+    }  // switch
   }  // while
 success:
   return ptr;
@@ -337,9 +537,85 @@ failure:
 
 ::PROTOBUF_NAMESPACE_ID::uint8* ABC::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  tracker_.state_.fetch_or(1);
   // @@protoc_insertion_point(serialize_to_array_start:test.ABC)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
+
+  // repeated int64 a = 1;
+  {
+    int byte_size = _a_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteInt64Packed(
+          1, _internal_a(), byte_size, target);
+    }
+  }
+
+  // repeated int64 a_index = 2;
+  {
+    int byte_size = _a_index_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteInt64Packed(
+          2, _internal_a_index(), byte_size, target);
+    }
+  }
+
+  // repeated int64 a_notused = 3;
+  {
+    int byte_size = _a_notused_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteInt64Packed(
+          3, _internal_a_notused(), byte_size, target);
+    }
+  }
+
+  // string b = 4;
+  if (this->b().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_b().data(), static_cast<int>(this->_internal_b().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "test.ABC.b");
+    target = stream->WriteStringMaybeAliased(
+        4, this->_internal_b(), target);
+  }
+
+  // string b_notused = 5;
+  if (this->b_notused().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_b_notused().data(), static_cast<int>(this->_internal_b_notused().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "test.ABC.b_notused");
+    target = stream->WriteStringMaybeAliased(
+        5, this->_internal_b_notused(), target);
+  }
+
+  // bytes c = 6;
+  if (this->c().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        6, this->_internal_c(), target);
+  }
+
+  // bytes c_notused = 7;
+  if (this->c_notused().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        7, this->_internal_c_notused(), target);
+  }
+
+  // .test.ABC.Nested d = 8;
+  if (this->has_d()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        8, _Internal::d(this), target, stream);
+  }
+
+  // .test.ABC.Nested d_notused = 9;
+  if (this->has_d_notused()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        9, _Internal::d_notused(this), target, stream);
+  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -356,6 +632,93 @@ size_t ABC::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // repeated int64 a = 1;
+  {
+    size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      Int64Size(this->a_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+            static_cast<::PROTOBUF_NAMESPACE_ID::int32>(data_size));
+    }
+    int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(data_size);
+    _a_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
+
+  // repeated int64 a_index = 2;
+  {
+    size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      Int64Size(this->a_index_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+            static_cast<::PROTOBUF_NAMESPACE_ID::int32>(data_size));
+    }
+    int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(data_size);
+    _a_index_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
+
+  // repeated int64 a_notused = 3;
+  {
+    size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      Int64Size(this->a_notused_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+            static_cast<::PROTOBUF_NAMESPACE_ID::int32>(data_size));
+    }
+    int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(data_size);
+    _a_notused_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
+
+  // string b = 4;
+  if (this->b().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_b());
+  }
+
+  // string b_notused = 5;
+  if (this->b_notused().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_b_notused());
+  }
+
+  // bytes c = 6;
+  if (this->c().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_c());
+  }
+
+  // bytes c_notused = 7;
+  if (this->c_notused().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_c_notused());
+  }
+
+  // .test.ABC.Nested d = 8;
+  if (this->has_d()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *d_);
+  }
+
+  // .test.ABC.Nested d_notused = 9;
+  if (this->has_d_notused()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *d_notused_);
+  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
@@ -388,6 +751,27 @@ void ABC::MergeFrom(const ABC& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  a_.MergeFrom(from.a_);
+  a_index_.MergeFrom(from.a_index_);
+  a_notused_.MergeFrom(from.a_notused_);
+  if (from.b().size() > 0) {
+    _internal_set_b(from._internal_b());
+  }
+  if (from.b_notused().size() > 0) {
+    _internal_set_b_notused(from._internal_b_notused());
+  }
+  if (from.c().size() > 0) {
+    _internal_set_c(from._internal_c());
+  }
+  if (from.c_notused().size() > 0) {
+    _internal_set_c_notused(from._internal_c_notused());
+  }
+  if (from.has_d()) {
+    _internal_mutable_d()->::test::ABC_Nested::MergeFrom(from._internal_d());
+  }
+  if (from.has_d_notused()) {
+    _internal_mutable_d_notused()->::test::ABC_Nested::MergeFrom(from._internal_d_notused());
+  }
 }
 
 void ABC::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -411,6 +795,19 @@ bool ABC::IsInitialized() const {
 void ABC::InternalSwap(ABC* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  a_.InternalSwap(&other->a_);
+  a_index_.InternalSwap(&other->a_index_);
+  a_notused_.InternalSwap(&other->a_notused_);
+  b_.Swap(&other->b_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  b_notused_.Swap(&other->b_notused_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  c_.Swap(&other->c_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  c_notused_.Swap(&other->c_notused_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(ABC, d_notused_)
+      + sizeof(ABC::d_notused_)
+      - PROTOBUF_FIELD_OFFSET(ABC, d_)>(
+          reinterpret_cast<char*>(&d_),
+          reinterpret_cast<char*>(&other->d_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata ABC::GetMetadata() const {

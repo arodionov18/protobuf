@@ -37,7 +37,7 @@ public:
         default:
           break;
       }
-      dump_file << elem.first << " " << message_state << std::endl;
+      dump_file << elem.first << " " << message_state << " " << elem.second.descriptor->field_count() << std::endl;
       if (message_state == "not_used" || message_state == "serialized" || message_state == "get_metadata") {
         dump_file.close();
         return;

@@ -1,6 +1,6 @@
-test.ABC.Nested getters
+test.ABC.Nested getters 1
 	test.ABC.Nested.value	1
-test.ABC getters
+test.ABC getters 9
 	test.ABC.a	1
 	test.ABC.a_index	1
 	test.ABC.a_notused	0

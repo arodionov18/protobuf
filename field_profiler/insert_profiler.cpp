@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <unordered_set>
 
 bool is_fields_stripped = false;
 
@@ -71,7 +72,7 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Outdent();
     printer.Outdent();
     printer.Print("}\n");
-    printer.Print("dump_file << elem.first << \" \" << message_state << std::endl;\n");
+    printer.Print("dump_file << elem.first << \" \" << message_state << \" \" << elem.second.descriptor->field_count() << std::endl;\n");
     printer.Print("if (message_state == \"not_used\" || message_state == \"serialized\" || message_state == \"get_metadata\") {\n");
     printer.Indent();
     printer.Print("dump_file.close();\n");
@@ -184,7 +185,7 @@ bool HasHasGetter(const google::protobuf::FieldDescriptor* field) {
 
 void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_context, const google::protobuf::Descriptor* message_type, const std::string& filename, const std::string& name) {
     std::map<std::string, std::string> vars;
-    std::cerr << message_type->full_name() << " " << message_type->name() << std::endl;
+    //std::cerr << message_type->full_name() << " " << message_type->name() << std::endl;
     vars["message_name"] = name;
     vars["message_field_number"] = std::to_string(message_type->field_count());
 
@@ -209,7 +210,7 @@ void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_con
     for (size_t j = 0; j < message_type->field_count(); ++j) {
         auto field = message_type->field(j);
 
-        std::cerr << "\t" << field->full_name() << std::endl;
+        //std::cerr << "\t" << field->full_name() << std::endl;
 
         std::vector<std::string> points;
 
@@ -269,7 +270,7 @@ bool ProfilerGenerator::Generate(const google::protobuf::FileDescriptor *file,
     auto filename = file->name();
     filename = filename.substr(0, filename.size() - 6);
 
-    std::cerr << filename << std::endl;
+    //std::cerr << filename << std::endl;
 
     GenerateTrackerFile(generator_context);
 

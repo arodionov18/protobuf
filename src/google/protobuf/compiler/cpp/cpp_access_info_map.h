@@ -5,6 +5,7 @@
 #include <memory>
 #include <unordered_set>
 #include <fstream>
+#include <iostream>
 
 namespace google {
 namespace protobuf {
