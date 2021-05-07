@@ -3,8 +3,35 @@
 #include <iostream>
 #include <memory>
 #include <unordered_set>
+#include <fstream>
 
 bool is_fields_stripped = false;
+std::unordered_set<std::string> stripped_fields;
+std::unordered_set<std::string> stripped_messages;
+
+void ProccessAccessInfoMap(const std::string& filename) {
+    std::ifstream input_stream(filename);
+    std::string name, is_used;
+    size_t field_number;
+
+    while (input_stream >> name >> is_used >> field_number) {
+        if (is_used == "not_used") {
+            stripped_messages.insert(name);
+        } else if (is_used == "serialized" || is_used == "get_metadata") {
+            continue;
+        } else if (is_used == "getters") {
+            for (size_t i = 0; i < field_number; ++i) {
+                input_stream >> name >> is_used;
+
+                if (is_used == "0") {
+                    stripped_fields.insert(name);
+                }
+            }
+        } else {
+            // throw error??
+        }
+    }
+}
 
 void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator_context) {
     std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> stream(generator_context->Open("tracker.h"));
@@ -75,8 +102,7 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Print("dump_file << elem.first << \" \" << message_state << \" \" << elem.second.descriptor->field_count() << std::endl;\n");
     printer.Print("if (message_state == \"not_used\" || message_state == \"serialized\" || message_state == \"get_metadata\") {\n");
     printer.Indent();
-    printer.Print("dump_file.close();\n");
-    printer.Print("return;\n");
+    printer.Print("continue;\n");
     printer.Outdent();
     printer.Print("}\n");
     printer.Print("for (size_t i = 0; i < elem.second.descriptor->field_count(); ++i) {\n");
@@ -183,13 +209,12 @@ bool HasHasGetter(const google::protobuf::FieldDescriptor* field) {
     return field->has_presence();
 }
 
-void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_context, const google::protobuf::Descriptor* message_type, const std::string& filename, const std::string& name) {
+void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_context, const google::protobuf::Descriptor* message, const std::string& filename, const std::string& name) {
     std::map<std::string, std::string> vars;
-    //std::cerr << message_type->full_name() << " " << message_type->name() << std::endl;
     vars["message_name"] = name;
-    vars["message_field_number"] = std::to_string(message_type->field_count());
+    vars["message_field_number"] = std::to_string(message->field_count());
 
-    GenerateMessageTracker(generator_context, message_type, filename, vars);
+    GenerateMessageTracker(generator_context, message, filename, vars);
 
     {
         std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_cc_namespace_scope(generator_context->OpenForInsert(filename + ".pb.cc", "namespace_scope"));
@@ -197,20 +222,22 @@ void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_con
         pb_namespace_scope_printer.Print((name + "::Tracker " + name + "::tracker_ = {};\n").c_str());
     }
 
-    if (is_fields_stripped) {
+    if (stripped_messages.find(message->full_name()) != stripped_messages.end()) {
         return;
     }
 
     { // InternalSerialize
-        std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_h_getters(generator_context->OpenForInsert(filename + ".pb.cc", "serialize_to_array_start:" + message_type->full_name()));
+        std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_h_getters(generator_context->OpenForInsert(filename + ".pb.cc", "serialize_to_array_start:" + message->full_name()));
         google::protobuf::io::Printer pb_includes(out_h_getters.get(), '$');
         pb_includes.Print("tracker_.state_.fetch_or(1);\n");
     }
 
-    for (size_t j = 0; j < message_type->field_count(); ++j) {
-        auto field = message_type->field(j);
+    for (size_t j = 0; j < message->field_count(); ++j) {
+        auto field = message->field(j);
 
-        //std::cerr << "\t" << field->full_name() << std::endl;
+        if (stripped_fields.find(field->full_name()) != stripped_fields.end()) {
+            continue;
+        }
 
         std::vector<std::string> points;
 
@@ -239,8 +266,20 @@ void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_con
             points.push_back("field_size:");
         }
 
+        std::string field_name_has_point = field->full_name();
+        const auto oneof_desc = field->real_containing_oneof();
+        if (oneof_desc) {
+            auto pos = field_name_has_point.find_last_of('.') + 1;
+            field_name_has_point[pos] = std::toupper(field_name_has_point[pos]);
+        }
+
         for (const auto &point : points) {
-            std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_h_getters(generator_context->OpenForInsert(filename + ".pb.h", point + field->full_name()));
+            std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_h_getters;
+            if (point == "field_has:" && oneof_desc) {
+                out_h_getters.reset(generator_context->OpenForInsert(filename + ".pb.h", point + field_name_has_point));
+            } else {
+                out_h_getters.reset(generator_context->OpenForInsert(filename + ".pb.h", point + field->full_name()));
+            }
             google::protobuf::io::Printer pb_includes(out_h_getters.get(), '$');
 
             vars["array_index"] = std::to_string(j / 32);
@@ -248,6 +287,20 @@ void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_con
 
             pb_includes.Print(vars, "tracker_.bitmap_[$array_index$].fetch_or(1U << $shift_index$);\n");
             pb_includes.Print(vars, "tracker_.state_.fetch_or(4);\n");
+        }
+    }
+}
+
+void AddMessage(std::map<std::string, std::pair<const google::protobuf::Descriptor*, std::string>>& messages, const google::protobuf::Descriptor* message, const std::string& prefix) {
+    for (size_t j = 0; j < message->field_count(); ++j) {
+        auto field = message->field(j);
+
+        const auto inner_message = field->message_type();
+
+        if (inner_message && !field->is_map()) {
+            std::string inner_name = prefix + "_" + inner_message->name();
+            messages.insert({inner_message->full_name(), {inner_message, inner_name}});
+            AddMessage(messages, inner_message, inner_name);
         }
     }
 }
@@ -260,17 +313,21 @@ bool ProfilerGenerator::Generate(const google::protobuf::FileDescriptor *file,
     std::vector<std::pair<std::string, std::string> > options;
     google::protobuf::compiler::ParseGeneratorParameter(parameter, &options);
 
-
+    std::string access_info_map_path;
     for (int i = 0; i < options.size(); i++) {
         if (options[i].first == "unused_field_stripping") {
             is_fields_stripped = true;
+        } else if (options[i].first == "access_info_map") {
+            access_info_map_path = options[i].second;
         }
+    }
+
+    if (is_fields_stripped) {
+        ProccessAccessInfoMap(access_info_map_path);
     }
 
     auto filename = file->name();
     filename = filename.substr(0, filename.size() - 6);
-
-    //std::cerr << filename << std::endl;
 
     GenerateTrackerFile(generator_context);
 
@@ -280,17 +337,12 @@ bool ProfilerGenerator::Generate(const google::protobuf::FileDescriptor *file,
         include_scope_printer.Print("#include \"tracker.h\"\n");
     }
 
-    std::map<std::string, std::pair<const google::protobuf::Descriptor*, std::string> > messages;
+    std::map<std::string, std::pair<const google::protobuf::Descriptor*, std::string>> messages;
 
     for (size_t i = 0; i < file->message_type_count(); ++i) {
-        auto message_type = file->message_type(i);
-        messages.insert({message_type->full_name(), {message_type, message_type->name()}});
-        for (size_t j = 0; j < message_type->field_count(); ++j) {
-            auto field_type = message_type->field(j);
-            if (field_type->message_type() != nullptr && !field_type->is_map()) {
-                messages.insert({field_type->message_type()->full_name(), {field_type->message_type(), message_type->name() + "_" + field_type->message_type()->name()}});
-            }
-        }
+        auto message = file->message_type(i);
+        messages.insert({message->full_name(), {message, message->name()}});
+        AddMessage(messages, message, message->name());
     }
 
     for (const auto& message: messages) {

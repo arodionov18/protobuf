@@ -6,12 +6,15 @@ using namespace std;
 std::unordered_map<std::string, TrackerData> DynamicTracker::map_;
 
 void CallSetters(test::ABC& abc) {
-    abc.clear_map_used();
-    // abc.clear_map_unused();
+    abc.clear_used();
+    abc.clear_used();
+    // abc.clear_unused();
+    // abc.clear_unused();
 }
 
 void CallGetters(test::ABC& abc) {
-    abc.map_used_size();
+    abc.a();
+    abc.has_b();
 }
 
 int main() {
