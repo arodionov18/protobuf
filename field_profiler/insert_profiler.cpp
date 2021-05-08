@@ -73,32 +73,46 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Print("// each message\n");
     //printer.Print("dump_file << elem.first << std::endl;\n");
     printer.Print("std::string message_state = \"not_used\";\n");
-    printer.Print("switch(elem.second.state->load()) {\n");
-    printer.Indent();
-    printer.Print("case 1:\n");
+    printer.Print("uint32_t state = elem.second.state->load();\n");
+    printer.Print("if (state & 1U) {\n");
     printer.Indent();
     printer.Print("message_state = \"serialized\";\n");
-    printer.Print("break;\n");
     printer.Outdent();
-    printer.Print("case 2:\n");
-    printer.Print("case 3:\n");
+    printer.Print("} else if (state & 2U) {\n");
     printer.Indent();
     printer.Print("message_state = \"get_metadata\";\n");
-    printer.Print("break;\n");
     printer.Outdent();
-    printer.Print("case 4:\n");
-    printer.Print("case 5:\n");
-    printer.Print("case 6:\n");
-    printer.Print("case 7:\n");
+    printer.Print("} else if (state & 4U) {\n");
     printer.Indent();
     printer.Print("message_state = \"getters\";\n");
     printer.Outdent();
-    printer.Print("default:\n");
-    printer.Indent();
-    printer.Print("break;\n");
-    printer.Outdent();
-    printer.Outdent();
     printer.Print("}\n");
+    // printer.Print("switch(elem.second.state->load()) {\n");
+    // printer.Indent();
+    // printer.Print("case 1:\n");
+    // printer.Indent();
+    // printer.Print("message_state = \"serialized\";\n");
+    // printer.Print("break;\n");
+    // printer.Outdent();
+    // printer.Print("case 2:\n");
+    // printer.Print("case 3:\n");
+    // printer.Indent();
+    // printer.Print("message_state = \"get_metadata\";\n");
+    // printer.Print("break;\n");
+    // printer.Outdent();
+    // printer.Print("case 4:\n");
+    // printer.Print("case 5:\n");
+    // printer.Print("case 6:\n");
+    // printer.Print("case 7:\n");
+    // printer.Indent();
+    // printer.Print("message_state = \"getters\";\n");
+    // printer.Outdent();
+    // printer.Print("default:\n");
+    // printer.Indent();
+    // printer.Print("break;\n");
+    // printer.Outdent();
+    // printer.Outdent();
+    // printer.Print("}\n");
     printer.Print("dump_file << elem.first << \" \" << message_state << \" \" << elem.second.descriptor->field_count() << std::endl;\n");
     printer.Print("if (message_state == \"not_used\" || message_state == \"serialized\" || message_state == \"get_metadata\") {\n");
     printer.Indent();
@@ -232,6 +246,12 @@ void ProccessMessage(google::protobuf::compiler::GeneratorContext* generator_con
         pb_includes.Print("tracker_.state_.fetch_or(1);\n");
     }
 
+    { // GetMetadata
+        std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_h_getters(generator_context->OpenForInsert(filename + ".pb.cc", "get_metadata:" + message->full_name()));
+        google::protobuf::io::Printer pb_includes(out_h_getters.get(), '$');
+        pb_includes.Print("tracker_.state_.fetch_or(2);\n");
+    }
+
     for (size_t j = 0; j < message->field_count(); ++j) {
         auto field = message->field(j);
 
@@ -347,6 +367,12 @@ bool ProfilerGenerator::Generate(const google::protobuf::FileDescriptor *file,
 
     for (const auto& message: messages) {
         ProccessMessage(generator_context, message.second.first, filename, message.second.second);
+    }
+
+    {
+        std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> out_cc_namespace_scope(generator_context->OpenForInsert(filename + ".pb.cc", "includes"));
+        google::protobuf::io::Printer pb_namespace_scope_printer(out_cc_namespace_scope.get(), '$');
+        pb_namespace_scope_printer.Print("std::unordered_map<std::string, TrackerData> DynamicTracker::map_ = {};\n");
     }
 
     return true;

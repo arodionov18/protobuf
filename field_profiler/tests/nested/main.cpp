@@ -3,8 +3,6 @@
 
 using namespace std;
 
-std::unordered_map<std::string, TrackerData> DynamicTracker::map_;
-
 void CallSetters(test::ABC& abc) {
     test::ABC::Nested nested;
     test::ABC::Nested::NestedInNested nested_in_nested;

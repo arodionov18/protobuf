@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package test;
+
+message ABC {
+    int32 used = 1;
+    int64 unused = 2;
+}
+
+message Meta {
+    optional int32 field = 1;
+}

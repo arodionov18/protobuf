@@ -3,8 +3,6 @@
 
 using namespace std;
 
-std::unordered_map<std::string, TrackerData> DynamicTracker::map_;
-
 void CallSetters(test::ABC& abc) {
     abc.clear_map_used();
     // abc.clear_map_unused();

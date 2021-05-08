@@ -3,20 +3,24 @@
 
 using namespace std;
 
-void CallSetters(test::ABC& abc) {
+void CallSetters(test::ABC& abc, test::Meta& meta) {
     abc.clear_used();
-    //abc.clear_unused();
+    meta.clear_field();
 }
 
-void CallGetters(test::ABC& abc) {
+void CallGetters(test::ABC& abc, test::Meta& meta) {
     abc.used();
+    meta.field();
 }
 
 int main() {
     DynamicTracker tracker;
     test::ABC abc;
-    CallSetters(abc);
-    CallGetters(abc);
+    test::Meta meta;
+    CallSetters(abc, meta);
+    CallGetters(abc, meta);
+    
+    meta.GetMetadata();
     tracker.DumpStatistics("stats.out");
     google::protobuf::ShutdownProtobufLibrary();
     return 0;

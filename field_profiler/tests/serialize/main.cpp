@@ -5,14 +5,10 @@ using namespace std;
 
 void CallSetters(test::ABC& abc) {
     abc.clear_used();
-    abc.clear_used();
-    // abc.clear_unused();
-    // abc.clear_unused();
 }
 
 void CallGetters(test::ABC& abc) {
-    abc.a();
-    abc.has_b();
+    abc.used();
 }
 
 int main() {
@@ -20,6 +16,10 @@ int main() {
     test::ABC abc;
     CallSetters(abc);
     CallGetters(abc);
+    string result;
+
+    abc.SerializeToString(&result);
+    
     tracker.DumpStatistics("stats.out");
     google::protobuf::ShutdownProtobufLibrary();
     return 0;

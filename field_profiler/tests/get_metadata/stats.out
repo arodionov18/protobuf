@@ -1,0 +1,4 @@
+test.Meta get_metadata 1
+test.ABC getters 2
+	test.ABC.used	1
+	test.ABC.unused	0

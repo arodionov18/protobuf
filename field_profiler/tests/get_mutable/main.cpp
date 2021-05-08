@@ -3,8 +3,6 @@
 
 using namespace std;
 
-std::unordered_map<std::string, TrackerData> DynamicTracker::map_;
-
 int main() {
     DynamicTracker tracker;
     test::ABC abc;
