@@ -1,0 +1,12 @@
+test.ABC.Nested getters 1
+	test.ABC.Nested.value	1
+test.ABC getters 9
+	test.ABC.a	1
+	test.ABC.a_index	1
+	test.ABC.a_notused	0
+	test.ABC.b	1
+	test.ABC.b_notused	0
+	test.ABC.c	1
+	test.ABC.c_notused	0
+	test.ABC.d	1
+	test.ABC.d_notused	0

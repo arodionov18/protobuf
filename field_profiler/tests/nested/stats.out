@@ -1,0 +1,7 @@
+test.ABC.Nested.NestedInNested not_used 1
+test.ABC.Nested getters 2
+	test.ABC.Nested.used	1
+	test.ABC.Nested.unused	0
+test.ABC getters 2
+	test.ABC.used	1
+	test.ABC.unused	0

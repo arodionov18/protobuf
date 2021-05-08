@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package test;
+
+message ABC {
+    message Nested {
+        message NestedInNested {
+            bool value = 1;
+        }
+
+        NestedInNested used = 1;
+        NestedInNested unused = 2;
+    }
+    
+    Nested used = 1;
+    Nested unused = 2;
+}

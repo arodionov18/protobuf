@@ -108,6 +108,10 @@ bool CppGenerator::Generate(const FileDescriptor* file,
       file_options.table_driven_parsing = true;
     } else if (options[i].first == "table_driven_serialization") {
       file_options.table_driven_serialization = true;
+    } else if (options[i].first == "access_info_map") {
+      file_options.access_info_map = std::make_shared<AccessInfoMap>(options[i].second);
+    } else if (options[i].first == "unused_field_stripping") {
+      file_options.unused_field_stripping = true;
     } else {
       *error = "Unknown generator option: " + options[i].first;
       return false;

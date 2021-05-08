@@ -1,0 +1,11 @@
+# Generated files
+generated/
+generated
+**generated/
+**generated/**
+
+*.pb.cc
+*.pb.h
+
+build
+build/

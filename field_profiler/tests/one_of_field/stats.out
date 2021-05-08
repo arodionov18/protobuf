@@ -1,0 +1,5 @@
+test.ABC getters 4
+	test.ABC.a	1
+	test.ABC.b	1
+	test.ABC.c	0
+	test.ABC.d	0

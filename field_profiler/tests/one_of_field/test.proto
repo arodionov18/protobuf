@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package test;
+
+message ABC {
+
+    oneof used {
+        int32 a = 1;
+        int64 b = 2;
+    }
+    
+    oneof unused {
+        string c = 3;
+        bytes d = 4;
+    }
+}

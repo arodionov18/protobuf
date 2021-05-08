@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package test;
+
+enum Simple {
+    FIRST = 0;
+    SECOND = 1;
+}
+
+message ABC {
+    Simple used = 1;
+    Simple unused = 2;
+}

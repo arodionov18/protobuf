@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package test;
+
+message ABC {
+    int32 a1 = 1;
+    int32 a2 = 2;
+    int32 a3 = 3;
+    int32 a4 = 4;
+
+    string b1 = 5;
+    string b2 = 6;
+    string b3 = 7;
+    string b4 = 8;
+
+    int64 c1 = 9;
+    int64 c2 = 10;
+    int64 c3 = 11;
+    int64 c4 = 12;
+
+    bool d1 = 13;
+    bool d2 = 14;
+    bool d3 = 15;
+    bool d4 = 16;
+}
