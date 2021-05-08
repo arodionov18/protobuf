@@ -70,49 +70,7 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Print("std::ofstream dump_file(filename.c_str());\n");
     printer.Print("for (const auto& elem: map_) {\n");
     printer.Indent();
-    printer.Print("// each message\n");
-    //printer.Print("dump_file << elem.first << std::endl;\n");
-    printer.Print("std::string message_state = \"not_used\";\n");
-    printer.Print("uint32_t state = elem.second.state->load();\n");
-    printer.Print("if (state & 1U) {\n");
-    printer.Indent();
-    printer.Print("message_state = \"serialized\";\n");
-    printer.Outdent();
-    printer.Print("} else if (state & 2U) {\n");
-    printer.Indent();
-    printer.Print("message_state = \"get_metadata\";\n");
-    printer.Outdent();
-    printer.Print("} else if (state & 4U) {\n");
-    printer.Indent();
-    printer.Print("message_state = \"getters\";\n");
-    printer.Outdent();
-    printer.Print("}\n");
-    // printer.Print("switch(elem.second.state->load()) {\n");
-    // printer.Indent();
-    // printer.Print("case 1:\n");
-    // printer.Indent();
-    // printer.Print("message_state = \"serialized\";\n");
-    // printer.Print("break;\n");
-    // printer.Outdent();
-    // printer.Print("case 2:\n");
-    // printer.Print("case 3:\n");
-    // printer.Indent();
-    // printer.Print("message_state = \"get_metadata\";\n");
-    // printer.Print("break;\n");
-    // printer.Outdent();
-    // printer.Print("case 4:\n");
-    // printer.Print("case 5:\n");
-    // printer.Print("case 6:\n");
-    // printer.Print("case 7:\n");
-    // printer.Indent();
-    // printer.Print("message_state = \"getters\";\n");
-    // printer.Outdent();
-    // printer.Print("default:\n");
-    // printer.Indent();
-    // printer.Print("break;\n");
-    // printer.Outdent();
-    // printer.Outdent();
-    // printer.Print("}\n");
+    printer.Print("std::string message_state = GetStateByNumber(elem.second.state->load());\n");
     printer.Print("dump_file << elem.first << \" \" << message_state << \" \" << elem.second.descriptor->field_count() << std::endl;\n");
     printer.Print("if (message_state == \"not_used\" || message_state == \"serialized\" || message_state == \"get_metadata\") {\n");
     printer.Indent();
@@ -138,6 +96,13 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Print("std::unordered_map<std::string, std::string> result;\n");
     printer.Print("for (const auto& elem: map_) {\n");
     printer.Indent();
+    printer.Print("std::string message_state = GetStateByNumber(elem.second.state->load());\n");
+    printer.Print("if (message_state != \"getters\") {\n");
+    printer.Indent();
+    printer.Print("result[elem.first] = message_state;\n");
+    printer.Print("continue;\n");
+    printer.Outdent();
+    printer.Print("}\n");
     printer.Print("for (size_t i = 0; i < elem.second.descriptor->field_count(); ++i) {\n");
     printer.Indent();
     printer.Print(
@@ -158,6 +123,25 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
     printer.Outdent();
     printer.Print("private:\n");
     printer.Indent();
+    printer.Print("static std::string GetStateByNumber(uint32_t state) {\n");
+    printer.Indent();
+    printer.Print("if (state & 1U) {\n");
+    printer.Indent();
+    printer.Print("return \"serialized\";\n");
+    printer.Outdent();
+    printer.Print("} else if (state & 2U) {\n");
+    printer.Indent();
+    printer.Print("return \"get_metadata\";\n");
+    printer.Outdent();
+    printer.Print("} else if (state & 4U) {\n");
+    printer.Indent();
+    printer.Print("return \"getters\";\n");
+    printer.Outdent();
+    printer.Print("}\n");
+    printer.Print("return \"not_used\";\n");
+    printer.Outdent();
+    printer.Print("}\n\n");
+
     printer.Print("static std::unordered_map<std::string, TrackerData> map_;\n");
     printer.Outdent();
     printer.Print("};\n\n");
@@ -165,6 +149,9 @@ void GenerateTrackerFile(google::protobuf::compiler::GeneratorContext* generator
 }
 
 void GenerateMessageTracker(google::protobuf::compiler::GeneratorContext* generator_context, const google::protobuf::Descriptor* message_type, const std::string& name, std::map<std::string, std::string>& vars) {
+    int bitmap_size = message_type->field_count() / 32 + (message_type->field_count() % 32 != 0);
+    vars["bitmap_size"] = std::to_string(bitmap_size);
+    bool is_stripped_message = stripped_messages.find(message_type->full_name()) != stripped_messages.end();
     std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> stream(generator_context->OpenForInsert(name + ".pb.h", "class_scope:" + message_type->full_name()));
     google::protobuf::io::Printer printer(stream.get(), '$');
     printer.Print("private:\n");
@@ -174,20 +161,24 @@ void GenerateMessageTracker(google::protobuf::compiler::GeneratorContext* genera
     printer.Indent();
     printer.Print("Tracker() {\n");
     printer.Indent();
-    printer.Print(vars, "bitmap_ = new std::atomic<uint32_t>[$message_field_number$ / 32 + ($message_field_number$ % 32 != 0)];\n");
+    if (!is_stripped_message) {
+        printer.Print(vars, "bitmap_ = new std::atomic<uint32_t>[$bitmap_size$];\n");
+    } else {
+        printer.Print("bitmap_ = nullptr;\n");
+    }
     printer.Print(vars, "DynamicTracker::RegisterProto($message_name$::default_instance().GetDescriptor(), (std::atomic<uint32_t>**)&bitmap_, (std::atomic<uint32_t>*)&state_);\n");
     printer.Outdent();
     printer.Print("}\n\n");
     printer.Print("~Tracker() {\n");
     printer.Indent();
-    printer.Print("delete [] bitmap_;\n");
+    if (!is_stripped_message) {
+        printer.Print("delete [] bitmap_;\n");
+    }
     printer.Outdent();
     printer.Print("}\n");
 
     printer.Outdent();
-    //printer.Print("private:\n");
     printer.Indent();
-    // should it be static??
     printer.Print(vars, "std::atomic<uint32_t>* bitmap_;\n");
     printer.Print("std::atomic<uint32_t> state_;\n");
     printer.Outdent();
@@ -201,10 +192,6 @@ void GenerateMessageTracker(google::protobuf::compiler::GeneratorContext* genera
 }
 
 bool HasMutableGetter(const google::protobuf::FieldDescriptor* field) {
-    // if (field->is_repeated())
-    //     return true;
-    // if (field->label() == google::protobuf::FieldDescriptor::LABEL_REPEATED)
-    //     return true;
     switch (field->type()) {
         case google::protobuf::FieldDescriptor::TYPE_BYTES:
         case google::protobuf::FieldDescriptor::TYPE_STRING:
@@ -216,10 +203,6 @@ bool HasMutableGetter(const google::protobuf::FieldDescriptor* field) {
 }
 
 bool HasHasGetter(const google::protobuf::FieldDescriptor* field) {
-    // if (field->is_optional())
-    //     return true;
-    // if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE)
-    //     return true;
     return field->has_presence();
 }
 
